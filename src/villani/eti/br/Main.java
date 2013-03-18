@@ -1,4 +1,4 @@
-package villani.eti.br;
+ï»¿package villani.eti.br;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,7 +43,7 @@ public class Main {
 			log.write(" - " + key + ": " + entradas.get(key));
 		}
 
-		log.write("Iniciando fase 1 - Avaliação dos classificadores...");
+		log.write("Iniciando fase 1 - AvaliaÃ§Ã£o dos classificadores...");
 		Evaluating.run(id, log, entradas);
 
 		log.write("Finalizando experimento.");

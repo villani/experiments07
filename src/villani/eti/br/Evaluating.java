@@ -1,4 +1,4 @@
-package villani.eti.br;
+﻿package villani.eti.br;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -93,20 +93,20 @@ public class Evaluating {
 
 						Instances instanciasTreino = null;
 						try {
-							log.write(" - Desserializando instancias de treino a partir de " + nomeTreino);
+							log.write(" - Desserializando instâncias de treino a partir de " + nomeTreino);
 							FileInputStream instanciasFIS = new FileInputStream(nomeTreino + ".bsi");
 							ObjectInputStream instanciasOIS = new ObjectInputStream(instanciasFIS);
 							instanciasTreino = (Instances) instanciasOIS.readObject();
 							instanciasOIS.close();
 							instanciasFIS.close();
 						} catch (Exception e) {
-							log.write(" - Falha ao desserializar instancias: " + e.getMessage());
+							log.write(" - Falha ao desserializar instâncias: " + e.getMessage());
 							System.exit(0);
 						}
 
 						LabelsMetaDataImpl rotulosTreino = null;
 						try {
-							log.write(" - Desserializando respectiva estrutura de r�tulos");
+							log.write(" - Desserializando respectiva estrutura de rótulos");
 							FileInputStream rotulosFIS = new FileInputStream(nomeTreino + ".labels");
 							ObjectInputStream rotulosOIS = new ObjectInputStream(rotulosFIS);
 							rotulosTreino = (LabelsMetaDataImpl) rotulosOIS.readObject();
@@ -119,10 +119,10 @@ public class Evaluating {
 
 						MultiLabelInstances baseTreino = null;
 						try {
-							log.write(" - Instanciando conjunto de treinamento multirr�tulo");
+							log.write(" - Instanciando conjunto de treinamento multirrótulo");
 							baseTreino = new MultiLabelInstances(instanciasTreino, rotulosTreino);
 						} catch (InvalidDataFormatException idfe) {
-							log.write(" - Erro no formato de dados ao instanciar conjunto multirr�tulos: " + idfe.getMessage());
+							log.write(" - Erro no formato de dados ao instanciar conjunto multirrótulos: " + idfe.getMessage());
 							System.exit(0);
 						}
 
@@ -188,20 +188,20 @@ public class Evaluating {
 
 							Instances instanciasTeste = null;
 							try {
-								log.write(" - Desserializando instancias de teste a partir de " + nomeTeste);
+								log.write(" - Desserializando instâncias de teste a partir de " + nomeTeste);
 								FileInputStream instanciasFIS = new FileInputStream(nomeTeste + ".bsi");
 								ObjectInputStream instanciasOIS = new ObjectInputStream(instanciasFIS);
 								instanciasTeste = (Instances) instanciasOIS.readObject();
 								instanciasOIS.close();
 								instanciasFIS.close();
 							} catch (Exception e) {
-								log.write(" - Falha ao desserializar instancias: " + e.getMessage());
+								log.write(" - Falha ao desserializar instâncias: " + e.getMessage());
 								System.exit(0);
 							}
 
 							LabelsMetaDataImpl rotulosTeste = null;
 							try {
-								log.write(" - Desserializando respectiva estrutura de r�tulos");
+								log.write(" - Desserializando respectiva estrutura de rótulos");
 								FileInputStream rotulosFIS = new FileInputStream(nomeTeste + ".labels");
 								ObjectInputStream rotulosOIS = new ObjectInputStream(rotulosFIS);
 								rotulosTeste = (LabelsMetaDataImpl) rotulosOIS.readObject();
@@ -214,10 +214,10 @@ public class Evaluating {
 
 							MultiLabelInstances baseTeste = null;
 							try {
-								log.write(" - Instanciando conjunto de teste multirr�tulo");
+								log.write(" - Instanciando conjunto de teste multirrótulo");
 								baseTeste = new MultiLabelInstances(instanciasTeste, rotulosTeste);
 							} catch (InvalidDataFormatException idfe) {
-								log.write(" - Erro no formato de dados ao instanciar conjunto multirr�tulos: " + idfe.getMessage());
+								log.write(" - Erro no formato de dados ao instanciar conjunto multirrótulos: " + idfe.getMessage());
 								System.exit(0);
 							}
 
@@ -226,21 +226,21 @@ public class Evaluating {
 							try {
 								avaliacao = avaliador.evaluate(mlLearner, baseTeste, medidas);
 							} catch (IllegalArgumentException iae) {
-								log.write(" - Argumentos utilizados inv�lidos: " + iae.getMessage());
+								log.write(" - Argumentos utilizados inválidos: " + iae.getMessage());
 								System.exit(0);
 							} catch (Exception e) {
 								log.write(" - Falha ao avaliar o modelo: " + e.getMessage());
 								System.exit(0);
 							}
 
-							log.write(" - Salvando resultado da avalia��o");
+							log.write(" - Salvando resultado da avaliação");
 							File resultado = new File(id + classificador + "-" + tecnica + "-" + eixo + "-Treino" + i + "-Teste" + j + ".csv");
 							try {
 								FileWriter escritor = new FileWriter(resultado);
 								escritor.write(avaliacao.toString());
 								escritor.close();
 							} catch (IOException ioe) {
-								log.write(" - Falha ao salvar resultado da avalia��o: " + ioe.getMessage());
+								log.write(" - Falha ao salvar resultado da avaliação: " + ioe.getMessage());
 								System.exit(0);
 							}
 
