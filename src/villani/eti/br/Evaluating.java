@@ -12,6 +12,9 @@ import mulan.classifier.MultiLabelLearnerBase;
 import mulan.classifier.lazy.BRkNN;
 import mulan.classifier.lazy.MLkNN;
 import mulan.classifier.meta.HMC;
+import mulan.classifier.meta.HOMER;
+import mulan.classifier.meta.HierarchyBuilder;
+import mulan.classifier.transformation.BinaryRelevance;
 import mulan.classifier.transformation.ClassifierChain;
 import mulan.classifier.transformation.LabelPowerset;
 import mulan.data.InvalidDataFormatException;
@@ -37,6 +40,7 @@ import mulan.evaluation.measure.OneError;
 import mulan.evaluation.measure.RankingLoss;
 import mulan.evaluation.measure.SubsetAccuracy;
 import weka.classifiers.lazy.IBk;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 
 public class Evaluating {
@@ -59,9 +63,10 @@ public class Evaluating {
 		boolean lp = Boolean.parseBoolean(entradas.get("lp"));
 		boolean hmc_t = Boolean.parseBoolean(entradas.get("hmc_t"));
 		boolean hmc_a = Boolean.parseBoolean(entradas.get("hmc_a"));
+		boolean homer_t = Boolean.parseBoolean(entradas.get("homer_t"));
 		String[] tecnicas = { "Ehd", "Lbp", "Sift", "Gabor" };
 		String[] eixos = { "T", "D", "A", "B" };
-		String[] classificadores = {"MLkNN", "BRkNN", "Chain", "LP", "HMC_T", "HMC_A"};
+		String[] classificadores = {"MLkNN", "BRkNN", "Chain", "LP", "HMC_T", "HMC_A", "HOMER_T"};
 
 		for (String tecnica : tecnicas) {
 
@@ -82,6 +87,7 @@ public class Evaluating {
 						if (classificador.equals("LP") && !lp) continue;
 						if (classificador.equals("HMC_T") && !hmc_t) continue;
 						if (classificador.equals("HMC_A") && !hmc_a) continue;
+						if (classificador.equals("HOMER_T") && !homer_t) continue;
 
 						String nomeTreino = "Bases/" + tecnica + "-Sub" + i + "-" + eixo;
 
@@ -125,8 +131,9 @@ public class Evaluating {
 						if (classificador.equals("MLkNN")) mlLearner = new MLkNN(); // default k=10
 						if (classificador.equals("BRkNN")) mlLearner = new BRkNN(); // default k=10
 						if (classificador.equals("Chain")) {
-							IBk kNN = new IBk(10);
-							mlLearner = new ClassifierChain(kNN);
+//							IBk classifier = new IBk(10);
+							RandomForest classifier = new RandomForest();
+							mlLearner = new ClassifierChain(classifier);
 						}
 						if (classificador.equals("LP")) {
 							IBk kNN = new IBk(10);
@@ -135,6 +142,11 @@ public class Evaluating {
 						if (classificador.equals("HMC_T")) mlLearner = new HMC();
 						if (classificador.equals("HMC_A")) {
 							mlLearner = new HMC(new MLkNN());
+						}
+						if (classificador.equals("HOMER_T")) {
+							RandomForest classifier = new RandomForest();
+							BinaryRelevance mlLearnerBase = new BinaryRelevance(classifier);
+							mlLearner = new HOMER(mlLearnerBase,3,HierarchyBuilder.Method.BalancedClustering);
 						}
 
 						try {
