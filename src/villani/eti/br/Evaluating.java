@@ -14,6 +14,7 @@ import mulan.classifier.lazy.MLkNN;
 import mulan.classifier.meta.HMC;
 import mulan.classifier.meta.HOMER;
 import mulan.classifier.meta.HierarchyBuilder;
+import mulan.classifier.meta.RAkEL;
 import mulan.classifier.transformation.BinaryRelevance;
 import mulan.classifier.transformation.ClassifierChain;
 import mulan.classifier.transformation.LabelPowerset;
@@ -64,9 +65,10 @@ public class Evaluating {
 		boolean hmc_t = Boolean.parseBoolean(entradas.get("hmc_t"));
 		boolean hmc_a = Boolean.parseBoolean(entradas.get("hmc_a"));
 		boolean homer_t = Boolean.parseBoolean(entradas.get("homer_t"));
+		boolean rakel = Boolean.parseBoolean(entradas.get("rakel"));
 		String[] tecnicas = { "Ehd", "Lbp", "Sift", "Gabor" };
 		String[] eixos = { "T", "D", "A", "B" };
-		String[] classificadores = {"MLkNN", "BRkNN", "Chain", "LP", "HMC_T", "HMC_A", "HOMER_T"};
+		String[] classificadores = {"MLkNN", "BRkNN", "Chain", "LP", "HMC_T", "HMC_A", "HOMER_T","RAkEL"};
 
 		for (String tecnica : tecnicas) {
 
@@ -88,6 +90,7 @@ public class Evaluating {
 						if (classificador.equals("HMC_T") && !hmc_t) continue;
 						if (classificador.equals("HMC_A") && !hmc_a) continue;
 						if (classificador.equals("HOMER_T") && !homer_t) continue;
+						if (classificador.equals("RAkEL") && !rakel) continue;
 
 						String nomeTreino = "Bases/" + tecnica + "-Sub" + i + "-" + eixo;
 
@@ -147,6 +150,11 @@ public class Evaluating {
 							RandomForest classifier = new RandomForest();
 							BinaryRelevance mlLearnerBase = new BinaryRelevance(classifier);
 							mlLearner = new HOMER(mlLearnerBase,3,HierarchyBuilder.Method.BalancedClustering);
+						}
+						if (classificador.equals("RAkEL")) {
+							RandomForest classifier = new RandomForest();
+							BinaryRelevance mlLearnerBase = new BinaryRelevance(classifier);
+							mlLearner = new RAkEL(mlLearnerBase);
 						}
 
 						try {
